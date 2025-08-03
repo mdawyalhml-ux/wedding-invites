@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>دعوتكم</title>
+  <style>
+    body { text-align: center; font-family: sans-serif; padding: 40px; }
+    img { max-width: 100%; border-radius: 12px; }
+  </style>
+</head>
+<body>
+
+<h2 id="message">جارٍ تحميل الدعوة...</h2>
+<img id="inviteImage" src="image.jpg" style="display:none;" />
+
+<script>
+  async function loadInvite() {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+
+    if (!code) {
+      document.getElementById("message").textContent = "الرمز غير موجود.";
+      return;
+    }
+
+    const response = await fetch("codes.json");
+    const codes = await response.json();
+
+    if (!codes[code]) {
+      document.getElementById("message").textContent = "هذا الرابط غير صالح.";
+      return;
+    }
+
+    if (codes[code].used) {
+      document.getElementById("message").textContent = "تم فتح الدعوة مسبقًا.";
+      return;
+    }
+
+    // ✅ عرض الدعوة
+    document.getElementById("message").style.display = "none";
+    document.getElementById("inviteImage").style.display = "block";
+
+    // ملاحظة: لا يمكن حفظ التعديل في JSON على GitHub مباشرة. نحتاج خدمة خارجية أو backend إذا تبين تسوينه لاحقًا.
+  }
+
+  loadInvite();
+</script>
+
+</body>
+</html>
